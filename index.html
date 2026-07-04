@@ -25,7 +25,45 @@
         body.theme-ocean { --bg-gradient: linear-gradient(135deg, #020024, #090979, #00d4ff); --accent: #00ffff; --text-correct: #fff; --glass-bg: rgba(0, 100, 255, 0.1); }
         body.theme-sunset { --bg-gradient: linear-gradient(135deg, #2b0f4c, #ff6b6b, #feca57); --accent: #ff9ff3; --text-correct: #feca57; --glass-bg: rgba(255, 100, 100, 0.1); }
         body.theme-forest { --bg-gradient: linear-gradient(135deg, #0f380f, #306230, #0a2e0a); --accent: #8bc34a; --text-correct: #cddc39; --glass-bg: rgba(10, 50, 10, 0.3); }
-        body.theme-galactic { --bg-gradient: linear-gradient(135deg, #02001c, #0d0033, #1f005c); --accent: #bd00ff; --text-correct: #00ffcc; --glass-bg: rgba(30, 0, 60, 0.3); }
+        
+        /* ADVANCED GALACTIC VOID PRESET OVERLAY BASE */
+        body.theme-galactic { 
+            background: #01000b !important;
+            --accent: #bd00ff; 
+            --text-correct: #00ffcc; 
+            --glass-bg: rgba(16, 0, 38, 0.6); 
+            --glass-border: rgba(189, 0, 255, 0.25);
+            --text-main: #f1f5f9;
+        }
+
+        /* GALACTIC BACKGROUND STARS CANVAS */
+        #galactic-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+            display: none;
+        }
+        body.theme-galactic #galactic-canvas {
+            display: block;
+        }
+
+        /* COLOR-SHIFTING DYNAMIC RAINBOW NAME GLOW */
+        .glow-cosmic-rainbow {
+            animation: dynamicRainbow 4s linear infinite !important;
+            font-weight: bold;
+        }
+        @keyframes dynamicRainbow {
+            0% { color: #ff007f; text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f; }
+            20% { color: #00f0ff; text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; }
+            40% { color: #00ff66; text-shadow: 0 0 10px #00ff66, 0 0 20px #00ff66; }
+            60% { color: #ffea00; text-shadow: 0 0 10px #ffea00, 0 0 20px #ffea00; }
+            80% { color: #cc00ff; text-shadow: 0 0 10px #cc00ff, 0 0 20px #cc00ff; }
+            100% { color: #ff007f; text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f; }
+        }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); color: var(--text-main); }
         body { background: var(--bg-gradient); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; transition: background 0.5s ease; }
@@ -90,9 +128,6 @@
         .cursor-laser .char.active { border-left: 2px solid #ff0055; box-shadow: -2px 0 10px #ff0055; animation: blink 0.5s infinite; }
         .cursor-diamond .char.active { border: 2px solid #ffffff; box-shadow: 0 0 12px #ffffff; border-radius: 4px; padding: 1px; color: #fff; }
         
-        @keyframes blink { 50% { opacity: 0.5; border-color: transparent; } }
-        @keyframes pulse { 50% { transform: scale(1.1); } }
-
         /* VIRTUAL KEYBOARD & SKINS */
         .keyboard { display: flex; flex-direction: column; gap: 8px; align-items: center; margin-top: 20px; transition: opacity 0.3s ease; }
         .key-row { display: flex; gap: 8px; }
@@ -109,7 +144,19 @@
         .particle { position: absolute; pointer-events: none; border-radius: 50%; opacity: 1; }
         .trail-matrix { width: 8px; height: 8px; background: #0f0; box-shadow: 0 0 8px #0f0; animation: matrixFade 0.6s linear forwards; }
         .trail-spark { width: 6px; height: 6px; background: #ffea00; box-shadow: 0 0 10px #ffea00; animation: sparkFly 0.5s ease-out forwards; }
-        .trail-rainbow { width: 8px; height: 8px; background: linear-gradient(to right, red, orange, yellow, green, blue, violet); animation: sparkFly 0.5s ease-out forwards; }
+        
+        /* BIG NEON RAINBOW TRAIL */
+        .trail-rainbow { 
+            width: 16px; 
+            height: 16px; 
+            background: linear-gradient(45deg, #ff0055, #00ffff, #00ff66, #ffcc00, #cc00ff); 
+            box-shadow: 0 0 12px #ff0055, 0 0 20px #00ffff; 
+            animation: rainbowSpark 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards; 
+        }
+        @keyframes rainbowSpark { 
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; filter: hue-rotate(360deg); } 
+        }
 
         @keyframes matrixFade { to { transform: translateY(30px); opacity: 0; } }
         @keyframes sparkFly { to { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
@@ -136,6 +183,8 @@
     </style>
 </head>
 <body>
+
+    <canvas id="galactic-canvas"></canvas>
 
     <div id="image-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 2000; justify-content: center; align-items: center; cursor: zoom-out;" onclick="closeImageModal()">
         <img id="modal-img" src="" style="max-width: 90%; max-height: 90%; border-radius: 12px; border: 2px solid var(--accent); box-shadow: 0 0 30px rgba(56, 189, 248, 0.4);">
@@ -292,7 +341,7 @@
                 <div class="shop-item glass"><h3>Neon</h3><button class="action-btn" onclick="buyOrEquip('theme', 'neon', 400)" id="btn-theme-neon">400 🪙</button></div>
                 <div class="shop-item glass" style="border: 1px solid #00ffff;"><h3>Ocean [Luxury]</h3><button class="action-btn" onclick="buyOrEquip('theme', 'ocean', 750)" id="btn-theme-ocean">750 🪙</button></div>
                 <div class="shop-item glass"><h3>Sunset</h3><button class="action-btn" onclick="buyOrEquip('theme', 'sunset', 350)" id="btn-theme-sunset">350 🪙</button></div>
-                <div class="shop-item glass" style="background: rgba(189,0,255,0.1); border: 1px dashed #bd00ff;"><h3>Galactic Void</h3><button class="action-btn" onclick="buyOrEquip('theme', 'galactic', 1200)" id="btn-theme-galactic">1200 🪙</button></div>
+                <div class="shop-item glass" style="background: rgba(189,0,255,0.15); border: 2px solid #bd00ff; box-shadow: 0 0 15px rgba(189,0,255,0.3);"><h3>Galactic Void</h3><button class="action-btn" onclick="buyOrEquip('theme', 'galactic', 1200)" id="btn-theme-galactic">1200 🪙</button></div>
             </div>
 
             <h3 style="color: var(--accent);">🔊 Sounds</h3>
@@ -309,7 +358,7 @@
                 <div class="shop-item glass"><h3>None</h3><button class="action-btn" onclick="buyOrEquip('trail', 'none', 0)" id="btn-trail-none">Equip</button></div>
                 <div class="shop-item glass"><h3>Matrix Rain</h3><button class="action-btn" onclick="buyOrEquip('trail', 'matrix', 250)" id="btn-trail-matrix">250 🪙</button></div>
                 <div class="shop-item glass"><h3>Sparks</h3><button class="action-btn" onclick="buyOrEquip('trail', 'spark', 250)" id="btn-trail-spark">250 🪙</button></div>
-                <div class="shop-item glass" style="background: rgba(255,255,255,0.1);"><h3>Rainbow Fire</h3><button class="action-btn" onclick="buyOrEquip('trail', 'rainbow', 650)" id="btn-trail-rainbow">650 🪙</button></div>
+                <div class="shop-item glass" style="background: rgba(255,255,255,0.1); border: 1px solid #ff0055;"><h3>Rainbow Fire</h3><button class="action-btn" onclick="buyOrEquip('trail', 'rainbow', 650)" id="btn-trail-rainbow">650 🪙</button></div>
             </div>
 
             <h3 style="color: var(--accent);">🖱️ Cursors</h3>
@@ -336,12 +385,12 @@
                 <div class="shop-item glass" style="background: rgba(236,72,153,0.1);"><h3>Omni God</h3><button class="action-btn" onclick="buyOrEquip('title', 'Omni God', 1500)" id="btn-title-Omni God">1500 🪙</button></div>
             </div>
             
-            <h3 style="color: var(--accent);">🌟 Name Glows</h3>
+            <h3 style="color: var(--accent);">🌟 Name Glows <span style="font-size: 12px; color: var(--text-dim); font-weight: normal;">(Requires Level 5+)</span></h3>
             <div class="grid-layout">
                 <div class="shop-item glass"><h3>None</h3><button class="action-btn" onclick="buyOrEquip('nameGlow', 'none', 0)" id="btn-nameGlow-none">Equip</button></div>
                 <div class="shop-item glass"><h3>Cyan Neon</h3><button class="action-btn" onclick="buyOrEquip('nameGlow', 'cyan', 400)" id="btn-nameGlow-cyan">400 🪙</button></div>
                 <div class="shop-item glass"><h3>Gold Aura</h3><button class="action-btn" onclick="buyOrEquip('nameGlow', 'gold', 450)" id="btn-nameGlow-gold">450 🪙</button></div>
-                <div class="shop-item glass" style="background: linear-gradient(45deg, #ff00ff, #00ffff); border: none;"><h3>Cosmic Rainbow</h3><button class="action-btn" onclick="buyOrEquip('nameGlow', 'cosmic', 1300)" id="btn-nameGlow-cosmic">1300 🪙</button></div>
+                <div class="shop-item glass" style="background: linear-gradient(45deg, #ff00ff, #00ffff); border: none; box-shadow: 0 0 10px #ff00ff;"><h3>Cosmic Rainbow</h3><button class="action-btn" onclick="buyOrEquip('nameGlow', 'cosmic', 1300)" id="btn-nameGlow-cosmic">1300 🪙</button></div>
             </div>
         </div>
 
@@ -490,20 +539,20 @@
                     let displayRank = rank === 1 ? "🥇" : (rank === 2 ? "🥈" : (rank === 3 ? "🥉" : rank));
                     let highlight = (docSnap.id === currentUserUid) ? 'style="background: rgba(255,255,255,0.1);"' : '';
                     
-                    let nameGlowStyle = "";
+                    let nameGlowAttr = "";
                     if (data.activeNameGlow === 'cyan') {
-                        nameGlowStyle = 'style="text-shadow: 0 0 10px #0ff, 0 0 20px #0ff; font-weight: bold; color: #e2e8f0;"';
+                        nameGlowAttr = 'style="text-shadow: 0 0 10px #0ff, 0 0 20px #0ff; font-weight: bold; color: #e2e8f0;"';
                     } else if (data.activeNameGlow === 'gold') {
-                        nameGlowStyle = 'style="text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700; font-weight: bold; color: #ffd700;"';
+                        nameGlowAttr = 'style="text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700; font-weight: bold; color: #ffd700;"';
                     } else if (data.activeNameGlow === 'cosmic') {
-                        nameGlowStyle = 'style="text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff; font-weight: bold; color: #ffffff;"';
+                        nameGlowAttr = 'class="glow-cosmic-rainbow"';
                     }
                     
                     let displayTitle = (data.activeTitle && data.activeTitle !== 'none') ? ` <span style="font-size:0.8em; opacity:0.65; font-weight: normal; text-shadow: none; color: var(--text-dim);">[${data.activeTitle}]</span>` : "";
                     
                     html += `<tr ${highlight}>
                         <td class="${rankClass}">${displayRank}</td>
-                        <td ${nameGlowStyle}>${data.username}${displayTitle}</td>
+                        <td ${nameGlowAttr}>${data.username}${displayTitle}</td>
                         <td style="font-weight: bold; color: var(--text-correct);">${data.highestWpm || 0} WPM</td>
                         <td>${data.level || 1}</td>
                     </tr>`;
@@ -521,27 +570,89 @@
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
+        // --- GALACTIC BACKGROUND ENGINE LOOP ---
+        const gCanvas = document.getElementById('galactic-canvas');
+        if (gCanvas) {
+            const gCtx = gCanvas.getContext('2d');
+            let stars = [];
+            function resizeGalactic() { gCanvas.width = window.innerWidth; gCanvas.height = window.innerHeight; }
+            window.addEventListener('resize', resizeGalactic); resizeGalactic();
+
+            for (let i = 0; i < 220; i++) {
+                stars.push({
+                    angle: Math.random() * Math.PI * 2,
+                    radius: Math.random() * Math.max(window.innerWidth, window.innerHeight) * 0.6,
+                    speed: 0.003 + Math.random() * 0.004,
+                    size: 1 + Math.random() * 2,
+                    color: `hsl(${250 + Math.random() * 70}, 100%, 75%)`
+                });
+            }
+
+            function animateGalacticLoop() {
+                if (document.body.classList.contains('theme-galactic')) {
+                    gCtx.fillStyle = 'rgba(1, 0, 11, 0.18)';
+                    gCtx.fillRect(0, 0, gCanvas.width, gCanvas.height);
+                    let cx = gCanvas.width / 2, cy = gCanvas.height / 2;
+                    stars.forEach(s => {
+                        s.angle += s.speed;
+                        s.radius -= 0.15;
+                        if (s.radius <= 6) { s.radius = Math.max(gCanvas.width, gCanvas.height) * 0.5 + Math.random() * 80; }
+                        let x = cx + Math.cos(s.angle) * s.radius;
+                        let y = cy + Math.sin(s.angle) * s.radius;
+                        gCtx.beginPath(); gCtx.fillStyle = s.color;
+                        gCtx.arc(x, y, s.size, 0, Math.PI * 2); gCtx.fill();
+                    });
+                }
+                requestAnimationFrame(animateGalacticLoop);
+            }
+            animateGalacticLoop();
+        }
+
         window.openImageModal = (src) => {
             const modal = document.getElementById('image-modal');
             const img = document.getElementById('modal-img');
-            img.src = src;
-            modal.style.display = 'flex';
+            img.src = src; modal.style.display = 'flex';
         };
 
-        window.closeImageModal = () => {
-            document.getElementById('image-modal').style.display = 'none';
-        };
+        window.closeImageModal = () => { document.getElementById('image-modal').style.display = 'none'; };
 
         function playKeystrokeSound() {
             if(!window.userData.activeSound || window.userData.activeSound === 'none') return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            // MUSICAL TYPE PLASMA ENGINE SOUND (PENTATONIC HARMONIC GENERATOR)
+            if (window.userData.activeSound === 'plasma') {
+                const pentatonicNotes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
+                const baseFreq = pentatonicNotes[charIndex % pentatonicNotes.length];
+                
+                const oscMain = audioCtx.createOscillator();
+                const oscHarmony = audioCtx.createOscillator();
+                const synthGain = audioCtx.createGain();
+                
+                oscMain.type = 'sine';
+                oscMain.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
+                
+                oscHarmony.type = 'triangle';
+                oscHarmony.frequency.setValueAtTime(baseFreq * 1.5, audioCtx.currentTime); // Perfect 5th interval
+                
+                synthGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                synthGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.22);
+                
+                oscMain.connect(synthGain);
+                oscHarmony.connect(synthGain);
+                synthGain.connect(audioCtx.destination);
+                
+                oscMain.start(); oscHarmony.start();
+                oscMain.stop(audioCtx.currentTime + 0.22); oscHarmony.stop(audioCtx.currentTime + 0.22);
+                return;
+            }
+            
             const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
             osc.connect(gainNode); gainNode.connect(audioCtx.destination);
             
             if (window.userData.activeSound === 'mech') { osc.type = 'square'; osc.frequency.setValueAtTime(150, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.03); gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03); }
             else if (window.userData.activeSound === 'pop') { osc.type = 'sine'; osc.frequency.setValueAtTime(400, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.05); gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05); }
             else if (window.userData.activeSound === 'laser') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(800, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.1); gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); }
-            else if (window.userData.activeSound === 'plasma') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(600, audioCtx.currentTime); osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.15); gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15); }
             osc.start(); osc.stop(audioCtx.currentTime + 0.1);
         }
 
@@ -550,7 +661,7 @@
             const p = document.createElement('div'); p.className = `particle trail-${window.userData.activeTrail}`;
             p.style.left = x + 'px'; p.style.top = y + 'px';
             if(window.userData.activeTrail === 'spark' || window.userData.activeTrail === 'rainbow') {
-                p.style.setProperty('--dx', (Math.random() - 0.5) * 60 + 'px'); p.style.setProperty('--dy', (Math.random() - 0.5) * 60 + 'px');
+                p.style.setProperty('--dx', (Math.random() - 0.5) * 70 + 'px'); p.style.setProperty('--dy', (Math.random() - 0.5) * 70 + 'px');
             }
             document.body.appendChild(p); setTimeout(() => p.remove(), 600);
         }
@@ -586,10 +697,17 @@
             let titleStr = (window.userData.activeTitle && window.userData.activeTitle !== 'none') ? ` <span style="font-size:0.8em; opacity:0.7;">[${window.userData.activeTitle}]</span>` : "";
             nameEl.innerHTML = (window.userData.username || "Guest") + titleStr;
             
-            if(window.userData.activeNameGlow === 'cyan') nameEl.style.textShadow = "0 0 10px #0ff, 0 0 20px #0ff";
-            else if(window.userData.activeNameGlow === 'gold') nameEl.style.textShadow = "0 0 10px #ffd700, 0 0 20px #ffd700";
-            else if(window.userData.activeNameGlow === 'cosmic') nameEl.style.textShadow = "0 0 10px #ff00ff, 0 0 20px #00ffff";
-            else nameEl.style.textShadow = "none";
+            if(window.userData.activeNameGlow === 'cyan') {
+                nameEl.style.textShadow = "0 0 10px #0ff, 0 0 20px #0ff";
+                nameEl.style.color = "#e2e8f0"; nameEl.className = "";
+            } else if(window.userData.activeNameGlow === 'gold') {
+                nameEl.style.textShadow = "0 0 10px #ffd700, 0 0 20px #ffd700";
+                nameEl.style.color = "#ffd700"; nameEl.className = "";
+            } else if(window.userData.activeNameGlow === 'cosmic') {
+                nameEl.style.textShadow = "none"; nameEl.className = "glow-cosmic-rainbow";
+            } else {
+                nameEl.style.textShadow = "none"; nameEl.style.color = ""; nameEl.className = "";
+            }
 
             document.getElementById('user-level').innerText = window.userData.level;
             document.getElementById('user-xp').innerText = window.userData.xp;
@@ -654,6 +772,17 @@
         window.buyOrEquip = (type, item, price) => {
             price = parseInt(price); let category = type + 's'; 
             const activeProp = 'active' + type.charAt(0).toUpperCase() + type.slice(1);
+            
+            // RE-LOCK LEVEL PROGRESSION CRITERIA FOR ALL PREMIUM NAME GLOW SEGMENTS
+            if (type === 'nameGlow' && item !== 'none') {
+                if (!window.userData.inventory[category] || !window.userData.inventory[category].includes(item)) {
+                    if (window.userData.level < 5) {
+                        alert("🔒 Name Glow configuration matrix locked! Reach Level 5 to access marketplace clearances.");
+                        return;
+                    }
+                }
+            }
+
             if (window.userData.inventory[category] && window.userData.inventory[category].includes(item)) {
                 window.userData[activeProp] = item;
             } else {
