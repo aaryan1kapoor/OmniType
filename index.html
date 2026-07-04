@@ -25,6 +25,9 @@
         body.theme-ocean { --bg-gradient: linear-gradient(135deg, #020024, #090979, #00d4ff); --accent: #00ffff; --text-correct: #fff; --glass-bg: rgba(0, 100, 255, 0.1); }
         body.theme-sunset { --bg-gradient: linear-gradient(135deg, #2b0f4c, #ff6b6b, #feca57); --accent: #ff9ff3; --text-correct: #feca57; --glass-bg: rgba(255, 100, 100, 0.1); }
         body.theme-forest { --bg-gradient: linear-gradient(135deg, #0f380f, #306230, #0a2e0a); --accent: #8bc34a; --text-correct: #cddc39; --glass-bg: rgba(10, 50, 10, 0.3); }
+        
+        /* NEW HIGH TIER THEME */
+        body.theme-galactic { --bg-gradient: linear-gradient(135deg, #02001c, #0d0033, #1f005c); --accent: #bd00ff; --text-correct: #00ffcc; --glass-bg: rgba(30, 0, 60, 0.3); }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); color: var(--text-main); }
         body { background: var(--bg-gradient); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; transition: background 0.5s ease; }
@@ -88,6 +91,9 @@
         .cursor-cyber .char.active { background: var(--accent); color: #000; border-radius: 4px; animation: pulse 1s infinite; }
         .cursor-laser .char.active { border-left: 2px solid #ff0055; box-shadow: -2px 0 10px #ff0055; animation: blink 0.5s infinite; }
         
+        /* NEW CUSTOM CURSOR */
+        .cursor-diamond .char.active { border: 2px solid #ffffff; box-shadow: 0 0 12px #ffffff; border-radius: 4px; padding: 1px; color: #fff; }
+        
         @keyframes blink { 50% { opacity: 0.5; border-color: transparent; } }
         @keyframes pulse { 50% { transform: scale(1.1); } }
 
@@ -99,12 +105,20 @@
         
         .kb-carbon .key { background: repeating-linear-gradient(45deg, #1a1a1a, #1a1a1a 5px, #2a2a2a 5px, #2a2a2a 10px); border-color: #000; color: #fff; }
         .kb-liquid .key { background: linear-gradient(270deg, #ff007f, #00d2ff, #00ff88); background-size: 400% 400%; animation: liquidMove 3s ease infinite; color: #fff; border: none; }
+        
+        /* NEW CUSTOM KEYBOARD SKIN */
+        .kb-goldplated .key { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); color: #000; border: 1px solid #7a5c00; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.4); }
+
         @keyframes liquidMove { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
         /* PARTICLES (TYPING TRAILS) */
         .particle { position: absolute; pointer-events: none; border-radius: 50%; opacity: 1; }
         .trail-matrix { width: 8px; height: 8px; background: #0f0; box-shadow: 0 0 8px #0f0; animation: matrixFade 0.6s linear forwards; }
         .trail-spark { width: 6px; height: 6px; background: #ffea00; box-shadow: 0 0 10px #ffea00; animation: sparkFly 0.5s ease-out forwards; }
+        
+        /* NEW HIGH TIER TRAIL */
+        .trail-rainbow { width: 8px; height: 8px; background: linear-gradient(to right, red, orange, yellow, green, blue, violet); animation: sparkFly 0.5s ease-out forwards; }
+
         @keyframes matrixFade { to { transform: translateY(30px); opacity: 0; } }
         @keyframes sparkFly { to { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
 
@@ -150,7 +164,7 @@
         <div class="header-left">
             <div class="logo" onclick="showDashboard()">
                 OmniType 
-                <span style="font-size: 14px; font-weight: normal; color: var(--text-dim); margin-left: 12px; border: 1px solid var(--glass-border); padding: 2px 8px; border-radius: 12px;">Version 1.2 Update</span>
+                <span style="font-size: 14px; font-weight: normal; background: var(--accent); color: #000; margin-left: 12px; padding: 2px 10px; border-radius: 12px; box-shadow: 0 0 10px var(--accent); font-weight: bold;">Version 1.2 latest</span>
             </div>
             <button class="action-btn" onclick="showDashboard()" style="margin-left: 20px;">🏠 Home</button>
         </div>
@@ -166,7 +180,7 @@
     <main>
         <div id="dashboard" class="dashboard-container">
             <div class="dashboard-section">
-                <div class="typing-title" style="text-align: center; font-size: 14px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">Typing Modes</div>
+                <div style="text-align: center; font-size: 14px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">Typing Modes</div>
                 <div class="dashboard-grid">
                     <div class="mode-card glass" onclick="startMode('learn')" style="border-color: var(--text-correct);">
                         <h2 style="color: var(--text-correct);">📈 Learn Touch Typing</h2>
@@ -198,17 +212,17 @@
                 <div class="dashboard-title">Patch Notes & Updates</div>
                 <div class="glass" style="padding: 25px; max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">
-                        <h2 style="color: var(--accent); font-size: 22px;">Version 1.2 Update releasing on July 5th 2026 🚀</h2>
-                        <span style="background: rgba(56, 189, 248, 0.2); color: var(--accent); padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;">Upcoming Patch</span>
+                        <h2 style="color: var(--accent); font-size: 22px;">Version 1.2 System Deploy Complete 🚀</h2>
+                        <span style="background: rgba(74, 222, 128, 0.2); color: var(--text-correct); padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;">Up-to-date</span>
                     </div>
                     <p style="color: var(--text-main); font-size: 16px; line-height: 1.6;">
-                        Get ready for the biggest OmniType expansion yet! In the incoming patch, we are introducing a massive collection of <strong>new skins, themes, cursors, and others</strong> to completely overhaul your custom configurations. Furthermore, <strong>more lessons are coming up</strong> specifically tuned to test advanced numeric syntax, compound layout structures, and layout fluidity!
+                        The expansion index is active! The live update environment has deployed a massive tier of <strong>new skins, themes, cursors, and other things</strong> directly to the customization shop. All historical basic shop item prices have been increased to balance database valuation, and strict restriction protocols are now deployed on global economies.
                     </p>
                     <p style="color: #fbbf24; font-size: 15px; line-height: 1.6; padding: 12px; background: rgba(251, 191, 36, 0.08); border-left: 4px solid #fbbf24; border-radius: 4px; margin-top: -5px;">
-                        ⚠️ <strong>Economy & Requirements Update:</strong> Please note that in the next update, premium <strong>name glows can only be bought after reaching a certain level</strong> to preserve their exclusivity. Additionally, inflation is hitting the marketplace and <strong>the prices of items are increasing</strong> across all customization charts. Stock up on your favorite presets now while rates remain at basic entry values!
+                        ⚠️ <strong>Marketplace & Price Increase Alert:</strong> Inflation metrics have locked. All standard items have received a permanent price increase. High-tier items like the Cyberpunk theme, Ocean theme, Liquid RGB keyboard matrix, and legendary custom chat titles have officially transitioned to <strong>Exclusives</strong> with maximum market cost.
                     </p>
                     
-                    <h3 style="color: var(--text-dim); font-size: 14px; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px;">Sneak Peek: Upcoming Custom Themes (Click image to expand)</h3>
+                    <h3 style="color: var(--text-dim); font-size: 14px; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px;">Custom Themes Preview (Click image to expand)</h3>
                     
                     <div class="updates-scroll" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; margin-top: 5px;">
                         <div style="min-width: 220px; cursor: pointer;" onclick="openImageModal('https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=800&auto=format&fit=crop')">
@@ -267,7 +281,8 @@
                 <div class="stat-box glass"><div class="stat-title">Accuracy</div><div class="stat-value" id="res-acc">0%</div></div>
                 <div class="stat-box glass"><div class="stat-title">Time</div><div class="stat-value" id="res-time">0s</div></div>
             </div>
-            <canvas id="chart-canvas"></canvas> <div class="btn-group">
+            <canvas id="chart-canvas"></canvas>
+            <div class="btn-group">
                 <button class="action-btn" onclick="startMode(currentAppMode)">Next Test ↻</button>
                 <button class="action-btn" style="background: transparent; border-color: var(--text-dim); color: var(--text-main);" onclick="showDashboard()">Menu</button>
             </div>
@@ -280,54 +295,61 @@
             <h3 style="color: var(--accent);">🎨 Themes</h3>
             <div class="grid-layout" id="shop-themes">
                 <div class="shop-item glass"><h3>Default</h3><button class="action-btn" onclick="buyOrEquip('theme', 'default', 0)" id="btn-theme-default">Equip</button></div>
-                <div class="shop-item glass"><h3>Cyberpunk</h3><button class="action-btn" onclick="buyOrEquip('theme', 'cyberpunk', 100)" id="btn-theme-cyberpunk">100 🪙</button></div>
-                <div class="shop-item glass"><h3>Retro</h3><button class="action-btn" onclick="buyOrEquip('theme', 'retro', 150)" id="btn-theme-retro">150 🪙</button></div>
-                <div class="shop-item glass"><h3>Neon</h3><button class="action-btn" onclick="buyOrEquip('theme', 'neon', 200)" id="btn-theme-neon">200 🪙</button></div>
-                <div class="shop-item glass"><h3>Ocean</h3><button class="action-btn" onclick="buyOrEquip('theme', 'ocean', 150)" id="btn-theme-ocean">150 🪙</button></div>
-                <div class="shop-item glass"><h3>Sunset</h3><button class="action-btn" onclick="buyOrEquip('theme', 'sunset', 150)" id="btn-theme-sunset">150 🪙</button></div>
+                <div class="shop-item glass" style="border: 1px solid #ff00ff;"><h3>Cyberpunk [Luxury]</h3><button class="action-btn" onclick="buyOrEquip('theme', 'cyberpunk', 600)" id="btn-theme-cyberpunk">600 🪙</button></div>
+                <div class="shop-item glass"><h3>Retro</h3><button class="action-btn" onclick="buyOrEquip('theme', 'retro', 300)" id="btn-theme-retro">300 🪙</button></div>
+                <div class="shop-item glass"><h3>Neon</h3><button class="action-btn" onclick="buyOrEquip('theme', 'neon', 400)" id="btn-theme-neon">400 🪙</button></div>
+                <div class="shop-item glass" style="border: 1px solid #00ffff;"><h3>Ocean [Luxury]</h3><button class="action-btn" onclick="buyOrEquip('theme', 'ocean', 750)" id="btn-theme-ocean">750 🪙</button></div>
+                <div class="shop-item glass"><h3>Sunset</h3><button class="action-btn" onclick="buyOrEquip('theme', 'sunset', 350)" id="btn-theme-sunset">350 🪙</button></div>
+                <div class="shop-item glass" style="background: rgba(189,0,255,0.1); border: 1px dashed #bd00ff;"><h3>Galactic Void</h3><button class="action-btn" onclick="buyOrEquip('theme', 'galactic', 1200)" id="btn-theme-galactic">1200 🪙</button></div>
             </div>
 
             <h3 style="color: var(--accent);">🔊 Sounds</h3>
             <div class="grid-layout">
                 <div class="shop-item glass"><h3>None</h3><button class="action-btn" onclick="buyOrEquip('sound', 'none', 0)" id="btn-sound-none">Equip</button></div>
-                <div class="shop-item glass"><h3>Mechanical</h3><button class="action-btn" onclick="buyOrEquip('sound', 'mech', 50)" id="btn-sound-mech">50 🪙</button></div>
-                <div class="shop-item glass"><h3>Bubble Pop</h3><button class="action-btn" onclick="buyOrEquip('sound', 'pop', 50)" id="btn-sound-pop">50 🪙</button></div>
-                <div class="shop-item glass"><h3>Laser</h3><button class="action-btn" onclick="buyOrEquip('sound', 'laser', 150)" id="btn-sound-laser">150 🪙</button></div>
+                <div class="shop-item glass"><h3>Mechanical</h3><button class="action-btn" onclick="buyOrEquip('sound', 'mech', 100)" id="btn-sound-mech">100 🪙</button></div>
+                <div class="shop-item glass"><h3>Bubble Pop</h3><button class="action-btn" onclick="buyOrEquip('sound', 'pop', 120)" id="btn-sound-pop">120 🪙</button></div>
+                <div class="shop-item glass"><h3>Laser</h3><button class="action-btn" onclick="buyOrEquip('sound', 'laser', 300)" id="btn-sound-laser">300 🪙</button></div>
+                <div class="shop-item glass" style="background: rgba(56,189,248,0.1);"><h3>Plasma Blast</h3><button class="action-btn" onclick="buyOrEquip('sound', 'plasma', 500)" id="btn-sound-plasma">500 🪙</button></div>
             </div>
 
             <h3 style="color: var(--accent);">✨ Typing Trails (VFX)</h3>
             <div class="grid-layout">
                 <div class="shop-item glass"><h3>None</h3><button class="action-btn" onclick="buyOrEquip('trail', 'none', 0)" id="btn-trail-none">Equip</button></div>
-                <div class="shop-item glass"><h3>Matrix Rain</h3><button class="action-btn" onclick="buyOrEquip('trail', 'matrix', 100)" id="btn-trail-matrix">100 🪙</button></div>
-                <div class="shop-item glass"><h3>Sparks</h3><button class="action-btn" onclick="buyOrEquip('trail', 'spark', 100)" id="btn-trail-spark">100 🪙</button></div>
+                <div class="shop-item glass"><h3>Matrix Rain</h3><button class="action-btn" onclick="buyOrEquip('trail', 'matrix', 250)" id="btn-trail-matrix">250 🪙</button></div>
+                <div class="shop-item glass"><h3>Sparks</h3><button class="action-btn" onclick="buyOrEquip('trail', 'spark', 250)" id="btn-trail-spark">250 🪙</button></div>
+                <div class="shop-item glass" style="background: rgba(255,255,255,0.1);"><h3>Rainbow Fire</h3><button class="action-btn" onclick="buyOrEquip('trail', 'rainbow', 650)" id="btn-trail-rainbow">650 🪙</button></div>
             </div>
 
             <h3 style="color: var(--accent);">🖱️ Cursors</h3>
             <div class="grid-layout">
                 <div class="shop-item glass"><h3>Default Line</h3><button class="action-btn" onclick="buyOrEquip('cursor', 'default', 0)" id="btn-cursor-default">Equip</button></div>
-                <div class="shop-item glass"><h3>Cyber Block</h3><button class="action-btn" onclick="buyOrEquip('cursor', 'cyber', 50)" id="btn-cursor-cyber">50 🪙</button></div>
-                <div class="shop-item glass"><h3>Red Laser</h3><button class="action-btn" onclick="buyOrEquip('cursor', 'laser', 50)" id="btn-cursor-laser">50 🪙</button></div>
+                <div class="shop-item glass"><h3>Cyber Block</h3><button class="action-btn" onclick="buyOrEquip('cursor', 'cyber', 150)" id="btn-cursor-cyber">150 🪙</button></div>
+                <div class="shop-item glass"><h3>Red Laser</h3><button class="action-btn" onclick="buyOrEquip('cursor', 'laser', 180)" id="btn-cursor-laser">180 🪙</button></div>
+                <div class="shop-item glass"><h3>Diamond Cross</h3><button class="action-btn" onclick="buyOrEquip('cursor', 'diamond', 550)" id="btn-cursor-diamond">550 🪙</button></div>
             </div>
 
             <h3 style="color: var(--accent);">⌨️ Keyboard Skins</h3>
             <div class="grid-layout">
                 <div class="shop-item glass"><h3>Default</h3><button class="action-btn" onclick="buyOrEquip('kbSkin', 'default', 0)" id="btn-kbSkin-default">Equip</button></div>
-                <div class="shop-item glass"><h3>Carbon Fiber</h3><button class="action-btn" onclick="buyOrEquip('kbSkin', 'carbon', 150)" id="btn-kbSkin-carbon">150 🪙</button></div>
-                <div class="shop-item glass"><h3>Liquid RGB</h3><button class="action-btn" onclick="buyOrEquip('kbSkin', 'liquid', 150)" id="btn-kbSkin-liquid">150 🪙</button></div>
+                <div class="shop-item glass"><h3>Carbon Fiber</h3><button class="action-btn" onclick="buyOrEquip('kbSkin', 'carbon', 350)" id="btn-kbSkin-carbon">350 🪙</button></div>
+                <div class="shop-item glass" style="border: 1px solid #ff007f;"><h3>Liquid RGB [Luxury]</h3><button class="action-btn" onclick="buyOrEquip('kbSkin', 'liquid', 800)" id="btn-kbSkin-liquid">800 🪙</button></div>
+                <div class="shop-item glass" style="background: rgba(251,191,36,0.1);"><h3>Gold Plated</h3><button class="action-btn" onclick="buyOrEquip('kbSkin', 'goldplated', 1100)" id="btn-kbSkin-goldplated">1100 🪙</button></div>
             </div>
 
             <h3 style="color: var(--accent);">📜 Titles</h3>
             <div class="grid-layout">
                 <div class="shop-item glass"><h3>None</h3><button class="action-btn" onclick="buyOrEquip('title', 'none', 0)" id="btn-title-none">Equip</button></div>
-                <div class="shop-item glass"><h3>Speed Demon</h3><button class="action-btn" onclick="buyOrEquip('title', 'Speed Demon', 200)" id="btn-title-Speed Demon">200 🪙</button></div>
-                <div class="shop-item glass"><h3>Ghost Typer</h3><button class="action-btn" onclick="buyOrEquip('title', 'Ghost Typer', 200)" id="btn-title-Ghost Typer">200 🪙</button></div>
+                <div class="shop-item glass" style="border: 1px solid var(--accent);"><h3>Speed Demon [Luxury]</h3><button class="action-btn" onclick="buyOrEquip('title', 'Speed Demon', 900)" id="btn-title-Speed Demon">900 🪙</button></div>
+                <div class="shop-item glass" style="border: 1px solid var(--accent);"><h3>Ghost Typer [Luxury]</h3><button class="action-btn" onclick="buyOrEquip('title', 'Ghost Typer', 1000)" id="btn-title-Ghost Typer">1000 🪙</button></div>
+                <div class="shop-item glass" style="background: rgba(236,72,153,0.1);"><h3>Omni God</h3><button class="action-btn" onclick="buyOrEquip('title', 'Omni God', 1500)" id="btn-title-Omni God">1500 🪙</button></div>
             </div>
             
             <h3 style="color: var(--accent);">🌟 Name Glows</h3>
             <div class="grid-layout">
                 <div class="shop-item glass"><h3>None</h3><button class="action-btn" onclick="buyOrEquip('nameGlow', 'none', 0)" id="btn-nameGlow-none">Equip</button></div>
-                <div class="shop-item glass"><h3>Cyan Neon</h3><button class="action-btn" onclick="buyOrEquip('nameGlow', 'cyan', 150)" id="btn-nameGlow-cyan">150 🪙</button></div>
-                <div class="shop-item glass"><h3>Gold Aura</h3><button class="action-btn" onclick="buyOrEquip('nameGlow', 'gold', 150)" id="btn-nameGlow-gold">150 🪙</button></div>
+                <div class="shop-item glass"><h3>Cyan Neon</h3><button class="action-btn" onclick="buyOrEquip('nameGlow', 'cyan', 400)" id="btn-nameGlow-cyan">400 🪙</button></div>
+                <div class="shop-item glass"><h3>Gold Aura</h3><button class="action-btn" onclick="buyOrEquip('nameGlow', 'gold', 450)" id="btn-nameGlow-gold">450 🪙</button></div>
+                <div class="shop-item glass" style="background: linear-gradient(45deg, #ff00ff, #00ffff); border: none;"><h3>Cosmic Rainbow</h3><button class="action-btn" onclick="buyOrEquip('nameGlow', 'cosmic', 1300)" id="btn-nameGlow-cosmic">1300 🪙</button></div>
             </div>
         </div>
 
@@ -388,7 +410,6 @@
             const err = document.getElementById('auth-error');
             
             if (u.length === 0 || p.length === 0) { err.innerText = "Please enter a username and password."; return; }
-            
             err.innerText = "Authenticating...";
             
             try {
@@ -452,7 +473,7 @@
             }
         };
 
-        // --- GLOBAL LEADERBOARD WITH SYNCED NAME GLOWS FOR ALL PLAYERS ---
+        // --- GLOBAL LEADERBOARD INTEGRATING ACTIVE CUSTOM TITLES & PREMIUM GLOWS ---
         window.fetchGlobalLeaderboard = async () => {
             const tbody = document.getElementById('leaderboard-body');
             tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">Loading global scores...</td></tr>`;
@@ -478,17 +499,21 @@
                     let displayRank = rank === 1 ? "🥇" : (rank === 2 ? "🥈" : (rank === 3 ? "🥉" : rank));
                     let highlight = (docSnap.id === currentUserUid) ? 'style="background: rgba(255,255,255,0.1);"' : '';
                     
-                    // Inject cosmic styling if player has name glow premium items equipped
                     let nameGlowStyle = "";
                     if (data.activeNameGlow === 'cyan') {
                         nameGlowStyle = 'style="text-shadow: 0 0 10px #0ff, 0 0 20px #0ff; font-weight: bold; color: #e2e8f0;"';
                     } else if (data.activeNameGlow === 'gold') {
                         nameGlowStyle = 'style="text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700; font-weight: bold; color: #ffd700;"';
+                    } else if (data.activeNameGlow === 'cosmic') {
+                        nameGlowStyle = 'style="text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff; font-weight: bold; color: #ffffff;"';
                     }
+                    
+                    // FIXED: EXTRACTED ACTIVE TITLES ARE NOW RENDERING ON THE LEADERBOARD INLINE
+                    let displayTitle = (data.activeTitle && data.activeTitle !== 'none') ? ` <span style="font-size:0.8em; opacity:0.65; font-weight: normal; text-shadow: none; color: var(--text-dim);">[${data.activeTitle}]</span>` : "";
                     
                     html += `<tr ${highlight}>
                         <td class="${rankClass}">${displayRank}</td>
-                        <td ${nameGlowStyle}>${data.username}</td>
+                        <td ${nameGlowStyle}>${data.username}${displayTitle}</td>
                         <td style="font-weight: bold; color: var(--text-correct);">${data.highestWpm || 0} WPM</td>
                         <td>${data.level || 1}</td>
                     </tr>`;
@@ -506,7 +531,6 @@
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
-        // --- LIGHTBOX PREVIEW HOOKS ---
         window.openImageModal = (src) => {
             const modal = document.getElementById('image-modal');
             const img = document.getElementById('modal-img');
@@ -527,6 +551,7 @@
             if (window.userData.activeSound === 'mech') { osc.type = 'square'; osc.frequency.setValueAtTime(150, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.03); gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03); }
             else if (window.userData.activeSound === 'pop') { osc.type = 'sine'; osc.frequency.setValueAtTime(400, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.05); gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05); }
             else if (window.userData.activeSound === 'laser') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(800, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.1); gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); }
+            else if (window.userData.activeSound === 'plasma') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(600, audioCtx.currentTime); osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.15); gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15); }
             osc.start(); osc.stop(audioCtx.currentTime + 0.1);
         }
 
@@ -534,7 +559,7 @@
             if(window.userData.activeTrail === 'none' || window.userData.activeTrail === 'default') return;
             const p = document.createElement('div'); p.className = `particle trail-${window.userData.activeTrail}`;
             p.style.left = x + 'px'; p.style.top = y + 'px';
-            if(window.userData.activeTrail === 'spark') {
+            if(window.userData.activeTrail === 'spark' || window.userData.activeTrail === 'rainbow') {
                 p.style.setProperty('--dx', (Math.random() - 0.5) * 60 + 'px'); p.style.setProperty('--dy', (Math.random() - 0.5) * 60 + 'px');
             }
             document.body.appendChild(p); setTimeout(() => p.remove(), 600);
@@ -573,6 +598,7 @@
             
             if(window.userData.activeNameGlow === 'cyan') nameEl.style.textShadow = "0 0 10px #0ff, 0 0 20px #0ff";
             else if(window.userData.activeNameGlow === 'gold') nameEl.style.textShadow = "0 0 10px #ffd700, 0 0 20px #ffd700";
+            else if(window.userData.activeNameGlow === 'cosmic') nameEl.style.textShadow = "0 0 10px #ff00ff, 0 0 20px #00ffff";
             else nameEl.style.textShadow = "none";
 
             document.getElementById('user-level').innerText = window.userData.level;
