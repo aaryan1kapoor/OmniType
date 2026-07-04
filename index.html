@@ -25,8 +25,6 @@
         body.theme-ocean { --bg-gradient: linear-gradient(135deg, #020024, #090979, #00d4ff); --accent: #00ffff; --text-correct: #fff; --glass-bg: rgba(0, 100, 255, 0.1); }
         body.theme-sunset { --bg-gradient: linear-gradient(135deg, #2b0f4c, #ff6b6b, #feca57); --accent: #ff9ff3; --text-correct: #feca57; --glass-bg: rgba(255, 100, 100, 0.1); }
         body.theme-forest { --bg-gradient: linear-gradient(135deg, #0f380f, #306230, #0a2e0a); --accent: #8bc34a; --text-correct: #cddc39; --glass-bg: rgba(10, 50, 10, 0.3); }
-        
-        /* NEW HIGH TIER THEME */
         body.theme-galactic { --bg-gradient: linear-gradient(135deg, #02001c, #0d0033, #1f005c); --accent: #bd00ff; --text-correct: #00ffcc; --glass-bg: rgba(30, 0, 60, 0.3); }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); color: var(--text-main); }
@@ -90,8 +88,6 @@
         .cursor-default .char.active { color: var(--text-main); border-bottom: 2px solid var(--accent); animation: blink 1s infinite; }
         .cursor-cyber .char.active { background: var(--accent); color: #000; border-radius: 4px; animation: pulse 1s infinite; }
         .cursor-laser .char.active { border-left: 2px solid #ff0055; box-shadow: -2px 0 10px #ff0055; animation: blink 0.5s infinite; }
-        
-        /* NEW CUSTOM CURSOR */
         .cursor-diamond .char.active { border: 2px solid #ffffff; box-shadow: 0 0 12px #ffffff; border-radius: 4px; padding: 1px; color: #fff; }
         
         @keyframes blink { 50% { opacity: 0.5; border-color: transparent; } }
@@ -105,18 +101,14 @@
         
         .kb-carbon .key { background: repeating-linear-gradient(45deg, #1a1a1a, #1a1a1a 5px, #2a2a2a 5px, #2a2a2a 10px); border-color: #000; color: #fff; }
         .kb-liquid .key { background: linear-gradient(270deg, #ff007f, #00d2ff, #00ff88); background-size: 400% 400%; animation: liquidMove 3s ease infinite; color: #fff; border: none; }
-        
-        /* NEW CUSTOM KEYBOARD SKIN */
         .kb-goldplated .key { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); color: #000; border: 1px solid #7a5c00; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.4); }
 
         @keyframes liquidMove { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
-        /* PARTICLES (TYPING TRAILS) */
+        /* PARTICLES */
         .particle { position: absolute; pointer-events: none; border-radius: 50%; opacity: 1; }
         .trail-matrix { width: 8px; height: 8px; background: #0f0; box-shadow: 0 0 8px #0f0; animation: matrixFade 0.6s linear forwards; }
         .trail-spark { width: 6px; height: 6px; background: #ffea00; box-shadow: 0 0 10px #ffea00; animation: sparkFly 0.5s ease-out forwards; }
-        
-        /* NEW HIGH TIER TRAIL */
         .trail-rainbow { width: 8px; height: 8px; background: linear-gradient(to right, red, orange, yellow, green, blue, violet); animation: sparkFly 0.5s ease-out forwards; }
 
         @keyframes matrixFade { to { transform: translateY(30px); opacity: 0; } }
@@ -473,7 +465,6 @@
             }
         };
 
-        // --- GLOBAL LEADERBOARD INTEGRATING ACTIVE CUSTOM TITLES & PREMIUM GLOWS ---
         window.fetchGlobalLeaderboard = async () => {
             const tbody = document.getElementById('leaderboard-body');
             tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">Loading global scores...</td></tr>`;
@@ -508,7 +499,6 @@
                         nameGlowStyle = 'style="text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff; font-weight: bold; color: #ffffff;"';
                     }
                     
-                    // FIXED: EXTRACTED ACTIVE TITLES ARE NOW RENDERING ON THE LEADERBOARD INLINE
                     let displayTitle = (data.activeTitle && data.activeTitle !== 'none') ? ` <span style="font-size:0.8em; opacity:0.65; font-weight: normal; text-shadow: none; color: var(--text-dim);">[${data.activeTitle}]</span>` : "";
                     
                     html += `<tr ${highlight}>
