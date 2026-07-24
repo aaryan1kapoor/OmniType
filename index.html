@@ -36,13 +36,17 @@
             --text-main: #f1f5f9;
         }
 
-        /* GALACTIC BACKGROUND STARS CANVAS */
+        /* FULL SCREEN STARFIELD CANVAS */
         #galactic-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
+            max-width: none !important; /* Fixes the cut-off bug */
+            max-height: none !important; /* Fixes the cut-off bug */
+            margin: 0 !important;
+            border-radius: 0 !important;
             z-index: -2;
             pointer-events: none;
             display: none;
@@ -400,8 +404,6 @@
                 <div class="stat-box glass"><div class="stat-title">Tests</div><div class="stat-value" id="stat-total-tests">0</div></div>
                 <div class="stat-box glass"><div class="stat-title">Best WPM</div><div class="stat-value" id="stat-highest-wpm">0</div></div>
                 <div class="stat-box glass"><div class="stat-title">Avg WPM</div><div class="stat-value" id="stat-avg-wpm">0</div></div>
-                <div class="stat-box glass"><div class="stat-title">Words</div><div class="stat-value" id="stat-total-words">0</div></div>
-                <div class="stat-box glass"><div class="stat-title">Time (M)</div><div class="stat-value" id="stat-total-time">0</div></div>
                 <div class="stat-box glass"><div class="stat-title">Lesson</div><div class="stat-value" id="stat-lesson-prog">1</div></div>
             </div>
             
@@ -437,8 +439,9 @@
         let currentUserUid = null;
 
         const defaultData = {
-            username: "", password: "", level: 1, xp: 0, coins: 0, highestWpm: 0, avgWpm: 0, totalTests: 0, totalTimeSec: 0, totalWords: 0, totalChars: 0, lessonIndex: 0, mistakesByKey: {}, 
-            pastTests: [],
+            username: "", password: "", level: 1, xp: 0, coins: 0, 
+            highestWpm: 0, avgWpm: 0, totalTests: 0, totalTimeSec: 0, totalWords: 0, totalChars: 0, 
+            lessonIndex: 0, mistakesByKey: {}, pastTests: [],
             inventory: { themes: ['default'], sounds: ['none'], trails: ['none'], cursors: ['default'], titles: ['none'], nameGlows: ['none'], kbSkins: ['default'] },
             activeTheme: 'default', activeSound: 'none', activeTrail: 'none', activeCursor: 'default', activeTitle: 'none', activeNameGlow: 'none', activeKbSkin: 'default'
         };
@@ -570,38 +573,92 @@
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
-        // --- GALACTIC BACKGROUND ENGINE LOOP ---
+        // --- UPGRADED GALACTIC VOID BACKGROUND ENGINE WITH BIG ENTITIES ---
         const gCanvas = document.getElementById('galactic-canvas');
         if (gCanvas) {
             const gCtx = gCanvas.getContext('2d');
             let stars = [];
+            let entities = []; // For nebulas/planets
             function resizeGalactic() { gCanvas.width = window.innerWidth; gCanvas.height = window.innerHeight; }
             window.addEventListener('resize', resizeGalactic); resizeGalactic();
 
-            for (let i = 0; i < 220; i++) {
+            // 800 Stars distributed across the entire screen
+            for (let i = 0; i < 800; i++) {
                 stars.push({
-                    angle: Math.random() * Math.PI * 2,
-                    radius: Math.random() * Math.max(window.innerWidth, window.innerHeight) * 0.6,
-                    speed: 0.003 + Math.random() * 0.004,
-                    size: 1 + Math.random() * 2,
-                    color: `hsl(${250 + Math.random() * 70}, 100%, 75%)`
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    size: Math.random() * 2 + 0.5,
+                    speedX: (Math.random() - 0.5) * 0.4, 
+                    speedY: (Math.random() - 0.5) * 0.4 + 0.3, // Slowly falling/drifting motion
+                    color: Math.random() > 0.8 ? '#bd00ff' : (Math.random() > 0.5 ? '#00ffff' : '#ffffff'),
+                    twinkle: Math.random() * Math.PI * 2,
+                    twinkleSpeed: 0.02 + Math.random() * 0.03
+                });
+            }
+
+            // Generate 5 massive celestial background entities
+            for (let i = 0; i < 5; i++) {
+                entities.push({
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    size: Math.random() * 40 + 30, // 30 to 70 base radius
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: (Math.random() - 0.5) * 0.5,
+                    hue: Math.random() * 360, // Random neon colors
+                    pulse: Math.random() * Math.PI
                 });
             }
 
             function animateGalacticLoop() {
                 if (document.body.classList.contains('theme-galactic')) {
-                    gCtx.fillStyle = 'rgba(1, 0, 11, 0.18)';
+                    gCtx.fillStyle = 'rgba(1, 0, 11, 0.3)'; // Trail effect over void background
                     gCtx.fillRect(0, 0, gCanvas.width, gCanvas.height);
-                    let cx = gCanvas.width / 2, cy = gCanvas.height / 2;
-                    stars.forEach(s => {
-                        s.angle += s.speed;
-                        s.radius -= 0.15;
-                        if (s.radius <= 6) { s.radius = Math.max(gCanvas.width, gCanvas.height) * 0.5 + Math.random() * 80; }
-                        let x = cx + Math.cos(s.angle) * s.radius;
-                        let y = cy + Math.sin(s.angle) * s.radius;
-                        gCtx.beginPath(); gCtx.fillStyle = s.color;
-                        gCtx.arc(x, y, s.size, 0, Math.PI * 2); gCtx.fill();
+                    
+                    // Draw large celestial entities (Planets / Nebulas)
+                    entities.forEach(e => {
+                        e.x += e.speedX;
+                        e.y += e.speedY;
+                        e.pulse += 0.02;
+
+                        if (e.x < -150) e.x = gCanvas.width + 150;
+                        if (e.x > gCanvas.width + 150) e.x = -150;
+                        if (e.y < -150) e.y = gCanvas.height + 150;
+                        if (e.y > gCanvas.height + 150) e.y = -150;
+
+                        // Create a glowing, pulsating radial gradient
+                        let gradient = gCtx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.size * 2);
+                        let pulseIntensity = 0.5 + Math.abs(Math.sin(e.pulse)) * 0.3;
+                        
+                        gradient.addColorStop(0, `hsla(${e.hue}, 100%, 70%, ${pulseIntensity})`);
+                        gradient.addColorStop(0.4, `hsla(${e.hue}, 80%, 40%, ${pulseIntensity * 0.5})`);
+                        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+
+                        gCtx.beginPath();
+                        gCtx.fillStyle = gradient;
+                        gCtx.arc(e.x, e.y, e.size * 2, 0, Math.PI * 2);
+                        gCtx.fill();
                     });
+
+                    // Draw the 800 stars on top
+                    stars.forEach(s => {
+                        s.x += s.speedX;
+                        s.y += s.speedY;
+                        
+                        if (s.x < 0) s.x = gCanvas.width;
+                        if (s.x > gCanvas.width) s.x = 0;
+                        if (s.y < 0) s.y = gCanvas.height;
+                        if (s.y > gCanvas.height) s.y = 0;
+                        
+                        s.twinkle += s.twinkleSpeed;
+                        let alpha = 0.3 + Math.abs(Math.sin(s.twinkle)) * 0.7;
+                        
+                        gCtx.beginPath();
+                        gCtx.globalAlpha = alpha;
+                        gCtx.fillStyle = s.color;
+                        gCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2); 
+                        gCtx.fill();
+                    });
+                    gCtx.globalAlpha = 1.0;
                 }
                 requestAnimationFrame(animateGalacticLoop);
             }
@@ -620,7 +677,6 @@
             if(!window.userData.activeSound || window.userData.activeSound === 'none') return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
             
-            // MUSICAL TYPE PLASMA ENGINE SOUND (PENTATONIC HARMONIC GENERATOR)
             if (window.userData.activeSound === 'plasma') {
                 const pentatonicNotes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
                 const baseFreq = pentatonicNotes[charIndex % pentatonicNotes.length];
@@ -633,7 +689,7 @@
                 oscMain.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
                 
                 oscHarmony.type = 'triangle';
-                oscHarmony.frequency.setValueAtTime(baseFreq * 1.5, audioCtx.currentTime); // Perfect 5th interval
+                oscHarmony.frequency.setValueAtTime(baseFreq * 1.5, audioCtx.currentTime); 
                 
                 synthGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
                 synthGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.22);
@@ -668,27 +724,24 @@
 
         function loadTestHistory() { if (!window.userData.pastTests) window.userData.pastTests = []; }
         function saveTestResult(record) { loadTestHistory(); const isDuplicate = window.userData.pastTests.some(t => t.id === record.id); if (!isDuplicate) window.userData.pastTests.push(record); }
-        function updatePersonalBests() { if (window.userData.avgWpm > window.userData.highestWpm) window.userData.highestWpm = window.userData.avgWpm; }
 
-        function recalculateLifetimeStats() {
-            loadTestHistory();
-            let totalWpm = 0; let highestWpm = 0; let validTestCount = 0; 
-            let totalTime = 0; let totalWords = 0; let totalChars = 0;
-            
-            window.userData.pastTests.forEach(test => {
-                if (test.mode !== 'free') {
-                    totalWpm += test.wpm;
-                    if (test.wpm > highestWpm) highestWpm = test.wpm;
-                    validTestCount++;
+        function recalculateLifetimeStats(newTest) {
+            if (!window.userData.totalTests) window.userData.totalTests = 0;
+            if (!window.userData.highestWpm) window.userData.highestWpm = 0;
+
+            window.userData.totalTests++;
+
+            if (newTest.mode !== 'free') {
+                if (newTest.wpm > window.userData.highestWpm) {
+                    window.userData.highestWpm = newTest.wpm;
                 }
-                totalTime += test.timeSec; totalWords += test.wordsTyped; totalChars += test.charsTyped;
+            }
+
+            let validSum = 0, validCount = 0;
+            window.userData.pastTests.forEach(t => {
+                if(t.mode !== 'free') { validSum += t.wpm; validCount++; }
             });
-            
-            window.userData.totalTests = window.userData.pastTests.length;
-            window.userData.avgWpm = validTestCount > 0 ? Math.round(totalWpm / validTestCount) : 0;
-            window.userData.highestWpm = highestWpm; window.userData.totalTimeSec = totalTime;
-            window.userData.totalWords = totalWords; window.userData.totalChars = totalChars;
-            updatePersonalBests();
+            window.userData.avgWpm = validCount > 0 ? Math.round(validSum / validCount) : window.userData.avgWpm;
         }
 
         window.updateHeaderStats = () => {
@@ -735,12 +788,11 @@
         
         window.showStatsPage = () => {
             window.hideAllSections(); document.getElementById('stats-page').style.display = 'flex';
-            document.getElementById('stat-total-tests').innerText = window.userData.totalTests;
-            document.getElementById('stat-highest-wpm').innerText = window.userData.highestWpm;
-            document.getElementById('stat-avg-wpm').innerText = window.userData.avgWpm;
-            document.getElementById('stat-total-words').innerText = window.userData.totalWords;
-            document.getElementById('stat-total-time').innerText = Math.round(window.userData.totalTimeSec / 60);
-            document.getElementById('stat-lesson-prog').innerText = window.userData.lessonIndex + 1;
+            
+            document.getElementById('stat-total-tests').innerText = window.userData.totalTests || 0;
+            document.getElementById('stat-highest-wpm').innerText = window.userData.highestWpm || 0;
+            document.getElementById('stat-avg-wpm').innerText = window.userData.avgWpm || 0;
+            document.getElementById('stat-lesson-prog').innerText = (window.userData.lessonIndex || 0) + 1;
             
             if(window.fetchGlobalLeaderboard) window.fetchGlobalLeaderboard();
         }
@@ -773,7 +825,6 @@
             price = parseInt(price); let category = type + 's'; 
             const activeProp = 'active' + type.charAt(0).toUpperCase() + type.slice(1);
             
-            // RE-LOCK LEVEL PROGRESSION CRITERIA FOR ALL PREMIUM NAME GLOW SEGMENTS
             if (type === 'nameGlow' && item !== 'none') {
                 if (!window.userData.inventory[category] || !window.userData.inventory[category].includes(item)) {
                     if (window.userData.level < 5) {
@@ -797,12 +848,32 @@
         }
 
         let currentAppMode = 'speed'; let learnPhase = 0; let learnMistakes = []; 
+        
         const lessonContent = [
-            "ff jj fj jf ff jj fj jf", "dd kk dk kd dd kk dk kd", "ss ll sl ls ss ll sl ls", "aa ;; a; ;a aa ;; a; ;a", "asdf jkl; fdsa ;lkj",
-            "gh hg gh hg asdfg hjkl;", "rr uu ru ur rr uu ru ur", "ee ii ei ie ee ii ei ie", "ww oo wo ow ww oo wo ow", "qq pp qp pq qq pp qp pq",
-            "qwert yuiop poiuy trewq", "vv mm vm mv vv mm vm mv", "cc ,, c, ,c cc ,, c, ,c", "xx .. x. .x xx .. x. .x", "zz // z/ /z zz // z/ /z",
-            "zxcvb nm,./ /.,mn bvcxz", "The quick brown fox jumps over the lazy dog"
+            "ff jj fj jf ff jj fj jf", "dd kk dk kd dd kk dk kd", 
+            "ss ll sl ls ss ll sl ls", "aa ;; a; ;a aa ;; a; ;a", 
+            "asdf jkl; fdsa ;lkj", "gh hg gh hg asdfg hjkl;", 
+            "rr uu ru ur rr uu ru ur", "ee ii ei ie ee ii ei ie", 
+            "ww oo wo ow ww oo wo ow", "qq pp qp pq qq pp qp pq",
+            "qwert yuiop poiuy trewq", "vv mm vm mv vv mm vm mv", 
+            "cc ,, c, ,c cc ,, c, ,c", "xx .. x. .x xx .. x. .x", 
+            "zz // z/ /z zz // z/ /z", "zxcvb nm,./ /.,mn bvcxz", 
+            "The quick brown fox jumps over the lazy dog",
+            "Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn",
+            "No Yes Up Down Left Right Go Stop Fast Slow High Low",
+            "Hello, world! How are you doing on this beautiful day?",
+            "123 456 789 000 11 22 33 44 55 66 77 88 99 00",
+            "1a 2s 3d 4f 5g 6h 7j 8k 9l 0; q1 w2 e3 r4 t5 y6",
+            "Find number row values: 99 rooms, 50 states, 12 months.",
+            "Special symbols verification: #1 $5 %10 &20 *100 @home",
+            "Logical operations review: (1 + 2) * 3 = 9; [a + b] - c;",
+            "Don't stop because you can't layout it's your baseline's path.",
+            "\"Type this clean sentence extremely carefully,\" she said.",
+            "if (x && y) { return x * 2; } else { system.exit(0); }",
+            "System layout fluidity: synchronization algorithm protocols implementation",
+            "The quick onyx goblin wizard jumps over the lazy dwarf directly!"
         ];
+
         const wordList = "the be to of and a in that have I it for not on with he as you do at this but his by from they we say her she or an will my one all would there their what so up out if about who get which go me when make can like time no just him know take people into year your good some could them see other than then now look only come its over think also back after use two how our work first well way even new want because any these give day most us".split(" ");
         let timeLimit = 15, timeLeft = 15, startTime = 0, countdownInterval = null, statsInterval = null, isTyping = false;
         let currentText = "", charIndex = 0, totalKeystrokes = 0, correctChars = 0, incorrectChars = 0, testHistory = [], localMistakes = {};
@@ -952,7 +1023,9 @@
 
             const testRecord = { id: Date.now(), date: new Date().toISOString(), mode: currentAppMode, wpm: finalWpm, rawWpm: Math.max(0, Math.round((totalTyped / 5) / exactElapsedMin)), accuracy: accuracy, consistency: consistency, timeSec: Math.round(exactElapsedMin * 60), charsTyped: totalTyped, wordsTyped: Math.round((currentAppMode === 'free' ? totalKeystrokes : correctChars) / 5), coinsEarned: coinsEarned, xpEarned: xpEarned };
             
-            saveTestResult(testRecord); recalculateLifetimeStats(); if(window.saveData) window.saveData();
+            saveTestResult(testRecord); 
+            recalculateLifetimeStats(testRecord);
+            if(window.saveData) window.saveData();
 
             document.getElementById('res-wpm').innerText = finalWpm; document.getElementById('res-acc').innerText = currentAppMode === 'free' ? "N/A" : `${accuracy}%`; document.getElementById('res-time').innerText = `${Math.max(1, Math.round(exactElapsedMin * 60))}s`;
             if(currentAppMode === 'learn') learnPhase = 0;
